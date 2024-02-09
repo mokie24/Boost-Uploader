@@ -7,8 +7,56 @@
 </head>
 <body>
 
-<div class="driveuploader-replace"></div>
-<script src="https://driveuploader.com/upload/OpkM5LxHfB/embed.js"></script>
+  <div id="uploader" style="position:relative;">
+    <div class="driveuploader-replace"></div>
+
+    <!-- This div is shown on top of the uploader, asking for additional info -->
+    <div id="veil" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;
+                          background:#eee;text-align:center;">
+      Name: <input type="text" id="name"><br>
+      E-mail: <input type="text" id="email"><br>
+      Subject: <input type="text" id="subject"><br>
+      <input type="button" id="nextbtn" value="Continue">
+    </div>
+  </div>
+
+  <script>
+    var du_instance;
+
+    function onbeforeupload(done, files) {
+      var veil = document.getElementById('veil');
+      veil.style.display = 'block';
+
+      var nextbtn = document.getElementById('nextbtn');
+      nextbtn.onclick = function(e) {
+        var name = document.getElementById('name').value,
+            email = document.getElementById('email').value,
+            subject = document.getElementById('subject').value;
+
+        if (!name.length || !email.length || !subject.length) {
+          alert('Please fill all the fields.');
+        } else {
+          nextbtn.disabled = 'disabled';
+          veil.style.display = 'none';
+          du_instance.setCustomMetadata('name', name);
+          du_instance.setCustomMetadata('email', email);
+          du_instance.setCustomMetadata('subject', subject);
+
+          done(); // continue the upload
+        }
+      };
+    }
+
+    function driveUploaderCallback(status, result, instance) {
+      if (status == 'init') {
+        du_instance = instance;
+        du_instance.setHook('beforeupload', onbeforeupload);
+      } else if (status == 'done') {
+        document.getElementById('uploader').innerHTML = 'Thank you for your upload!';
+      }
+    }
+  </script>
+  <script src="https://driveuploader.com/upload/OpkM5LxHfB/embed.js"></script>
 
 </body>
 </html>
