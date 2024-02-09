@@ -26,20 +26,22 @@
       veil.style.display = 'block';
 
       var nextbtn = document.getElementById('nextbtn');
-      nextbtn.onclick = function(e) {
+    nextbtn.onclick = function(e) {
         var subject = document.getElementById('postname').value;
-
-        if (!postname.length) {
-          alert('Bitte fülle das Feld aus.');
+    
+        // Corrected from !postname.length to !subject.length
+        if (!subject.length) {
+            alert('Bitte fülle das Feld aus.');
         } else {
-          nextbtn.disabled = 'disabled';
-          veil.style.display = 'none';
-          du_instance.setCustomMetadata('postname', postname);
-
-          done(); // continue the upload
+            nextbtn.disabled = 'disabled';
+            veil.style.display = 'none';
+            // Also corrected the argument from 'postname' to 'subject'
+            du_instance.setCustomMetadata('postname', subject);
+    
+            done(); // continue the upload
         }
-      };
-    }
+    };
+
 
     function driveUploaderCallback(status, result, instance) {
       if (status == 'init') {
